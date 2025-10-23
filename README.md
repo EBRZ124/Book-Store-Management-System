@@ -6,6 +6,8 @@ Current State:
 
 Improved GUI, displays the books that are pre-written in code
 
+Added a search functionality to search books by title
+
 - 07.10.2025. 
 
 Very primative state. 
