@@ -40,6 +40,31 @@ def display_books(book_data):
             col = 0
             row += 1
 
+def book_search():
+    query = search_entry.get().lower()
+    if not query:
+        display_books(main.book_data)
+        return
+
+    filtered_books = {
+        key: book for key, book in main.book_data.items()
+        if query in book["title"].lower()
+    }
+    display_books(filtered_books)
+
+
+tk.Label(book_display_frame, text="Search Book Title:", bg="#E6E6E6", font=("Comic Sans MS", 11, "italic"))
+
+
+search_entry = tk.Entry(book_entry_frame, width=30)
+search_entry.pack(side="left", padx=10)
+
+search_button = tk.Button(book_entry_frame, text="Search", command=book_search, bg="white")
+search_button.pack(side="left")
+
+reset_button = tk.Button(book_entry_frame, text="Reset", command=lambda: display_books(main.book_data), bg="#CCCCCC")
+reset_button.pack(side="left", padx=(5, 0))
+
 display_books(main.book_data)
 
 book_inventory.mainloop()
