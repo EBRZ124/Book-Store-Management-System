@@ -2,6 +2,10 @@ Goal: Make a book store management system where a user can both create a listing
 
 Current State:
 
+- 24.10.2025.
+
+Improved searching - word segments will display what is being searched for
+
 - 23.10.2025
 
 Improved GUI, displays the books that are pre-written in code
