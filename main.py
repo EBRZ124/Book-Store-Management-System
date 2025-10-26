@@ -4,7 +4,7 @@ book_data = {
     3: {"title" : "Three Comrades", "author" : "Erich Maria Remarque", "ISBN" : 9780449912423, "price" : 15, "stock" : 8},
     4: {"title" : "The Chamber", "author" : "Josh Grisham", "ISBN" : 12, "price" : 15, "stock" : 8}
 }
-
+"""
 def add_book(book_data):
     new_id = max(book_data.keys()) + 1
 
@@ -41,3 +41,5 @@ def add_book(book_data):
     print("\nNew book and information added!")
 
 add_book(book_data)
+
+"""
