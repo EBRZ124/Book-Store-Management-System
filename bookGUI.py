@@ -14,6 +14,11 @@ book_display_frame.pack()
 
 books_per_row = 3
 
+def delete_book(book_key):
+    if book_key in main.book_data:
+        del main.book_data[book_key]
+        display_books(main.book_data)
+
 def display_books(book_data):
     for widget in book_display_frame.winfo_children():
         widget.destroy()
@@ -35,6 +40,7 @@ def display_books(book_data):
         tk.Label(book_frame, text=f"ISBN: {book['ISBN']}", font=("Comic Sans MS", 9), fg="black", bg="white").pack(anchor="w")
         tk.Label(book_frame, text=f"Price: ${book['price']}", font=("Comic Sans MS", 10, "bold"), fg="black", bg="white").pack(anchor="w")
         tk.Label(book_frame, text=f"Stock: {book['stock']}", font=("Comic Sans MS", 10), bg="white").pack(anchor="w")
+        delete = tk.Button(book_frame, text = "Delete Book", font=("Comic Sans MS", 8), bg="#FFCCCC", command=lambda k=key: delete_book(k)).pack(anchor="w")
 
         col += 1
         if col >= books_per_row:
