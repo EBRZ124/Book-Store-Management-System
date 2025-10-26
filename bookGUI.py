@@ -4,7 +4,7 @@ import main
 
 book_inventory = tk.Tk()
 book_inventory.title("Book Inventory")
-book_inventory.geometry("640x580")
+book_inventory.geometry("740x580")
 book_inventory.configure(bg="#E6E6E6", cursor="star")
 
 book_entry_frame = tk.Frame(book_inventory, bg="#E6E6E6")
@@ -21,7 +21,7 @@ def delete_book(book_key):
         display_books(main.book_data)
 
         tkinter.messagebox.showinfo("Alert!", "Book successfully deleted")
-
+    
 
 def display_books(book_data):
     for widget in book_display_frame.winfo_children():
@@ -51,32 +51,110 @@ def display_books(book_data):
             col = 0
             row += 1
 
+def show_top_row():
+    def search_books():
+        query = search_entry.get().strip().lower()
+        if not query:
+            display_books(main.book_data)
+            return
 
-def search_books():
-    query = search_entry.get().strip().lower()
-    if not query:
-        display_books(main.book_data)
+        filtered_books = {
+            key: book for key, book in main.book_data.items()
+            if query in book["title"].lower()
+        }
+
+        display_books(filtered_books)
+
+    tk.Label(book_entry_frame, text="Search Book Title:", fg="black", bg="#E6E6E6", font=("Comic Sans MS", 11, "bold")).pack(side="left", padx=(0, 5))
+
+    search_entry = tk.Entry(book_entry_frame, width=30)
+    search_entry.pack(side="left", padx=(0, 10))
+
+    search_button = tk.Button(book_entry_frame, text="Search", command=search_books,bg="#CCCCCC")
+    search_button.pack(side="left")
+
+    reset_button = tk.Button(book_entry_frame,text="Reset", command=lambda: display_books(main.book_data), bg="#CCCCCC")
+    reset_button.pack(side="left", padx=(5, 0))
+
+    add_button = tk.Button(book_entry_frame, text="Add New Book", command=lambda: build_book_addition_screen(), bg="#B3E6B3")
+    add_button.pack(side="left", padx=(10, 0))
+
+def build_book_addition_screen():
+    for widget in book_inventory.winfo_children():
+        widget.destroy()
+
+    add_frame=tk.Frame(book_inventory, bg="#E6E6E6")
+    add_frame.pack(pady=20)
+
+    tk.Label(add_frame, text = "Add a new book", bg="#E6E6E6", fg="black", font=("Comic Sans MS", 24, "bold")).grid(row=0, column=0, columnspan=2, pady=20)
+
+    labels = ["title: ", "author: ", "ISBN: ", "Price: ", "Stock: "]
+    entries = {}
+
+    for i, field in enumerate(labels):
+        tk.Label(add_frame, text=field, fg="black", bg="#E6E6E6", font=("Comic Sans MS", 10)).grid(row=i+1, column=0, sticky="e", pady=5, padx=5)
+        entry = tk.Entry(add_frame, width=30, bg="#E6E6E6", fg="black")
+        entry.grid(row=i+1, column=1, padx=10, pady=10)
+        entries[field.replace(":", "").strip().lower()] = entry
+
+    tk.Button(add_frame, text="Save Book", bg="#B3E6B3",
+              command=lambda: save_new_book(entries)).grid(row=7, column=0, columnspan=2, pady=15)
+    tk.Button(add_frame, text="Back", bg="#CCCCCC",
+              command=lambda: display_books(main.book_data)).grid(row=8, column=0, columnspan=2, pady=5)
+
+def save_new_book(entries):
+    title = entries["title"].get().strip()
+    author = entries["author"].get().strip()
+    isbn = entries["isbn"].get().strip()
+    price = entries["price"].get().strip()
+    stock = entries["stock"].get().strip()
+
+    if not all([title, author, isbn, price, stock]):
+        tkinter.messagebox.showerror("Missing Field(s)", "Please fill out all of the fields")
+        return
+    
+    try:
+        isbn = int(isbn)
+    except ValueError:
+        tkinter.messagebox.showerror("Invalid ISBN", "ISBN must be a number")
+
+    existing_isbn = [book["ISBN"] for book in main.book_data.values()]
+    if isbn in existing_isbn:
+        tkinter.messagebox.showerror("Duplicate ISBN", "This ISBN number already exists")
         return
 
-    filtered_books = {
-        key: book for key, book in main.book_data.items()
-        if query in book["title"].lower()
+    try:
+        price = float(price)
+        stock = int(stock)
+    except ValueError:
+        tkinter.messagebox.showerror("Invalid Input", "Price must be a number; Stock must be an integer.")
+        return
+    
+    new_id = max(main.book_data.keys(), default=0) + 1
+    main.book_data[new_id] = {
+        "title": title,
+        "author": author,
+        "ISBN": isbn,
+        "price": price,
+        "stock": stock
     }
 
-    display_books(filtered_books)
+    tkinter.messagebox.showinfo("Successful entry", f"The book '{title}' has been successfully added to the library")
 
+    for widget in book_inventory.winfo_children():
+        widget.destroy()
 
-tk.Label(book_entry_frame, text="Search Book Title:", fg="black", bg="#E6E6E6", font=("Comic Sans MS", 11, "bold")).pack(side="left", padx=(0, 5))
+    global book_entry_frame, book_display_frame
+    book_entry_frame = tk.Frame(book_inventory, bg="#E6E6E6")
+    book_entry_frame.pack(pady=10)
 
-search_entry = tk.Entry(book_entry_frame, width=30)
-search_entry.pack(side="left", padx=(0, 10))
+    book_display_frame = tk.Frame(book_inventory, bg="#E6E6E6")
+    book_display_frame.pack()
 
-search_button = tk.Button(book_entry_frame, text="Search", command=search_books,bg="#CCCCCC")
-search_button.pack(side="left")
+    display_books(main.book_data)
+    show_top_row()
 
-reset_button = tk.Button(book_entry_frame,text="Reset", command=lambda: display_books(main.book_data), bg="#CCCCCC")
-reset_button.pack(side="left", padx=(5, 0))
 
 display_books(main.book_data)
-
+show_top_row()
 book_inventory.mainloop()
