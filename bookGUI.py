@@ -10,6 +10,12 @@ book_inventory.configure(bg="#E6E6E6", cursor="star")
 book_entry_frame = tk.Frame(book_inventory, bg="#E6E6E6")
 book_entry_frame.pack(pady=10)
 
+book_entry_frame2 = tk.Frame(book_inventory, bg="#E6E6E6")
+book_entry_frame2.pack(pady=10)
+
+book_add_frame = tk.Frame(book_inventory, bg="#E6E6E6")
+book_add_frame.pack(pady=10)
+
 book_display_frame = tk.Frame(book_inventory, bg="#E6E6E6")
 book_display_frame.pack()
 
@@ -51,8 +57,8 @@ def display_books(book_data):
             col = 0
             row += 1
 
-def show_top_row():
-    def search_books():
+def show_title_search():
+    def search_by_title():
         query = search_entry.get().strip().lower()
         if not query:
             display_books(main.book_data)
@@ -70,13 +76,39 @@ def show_top_row():
     search_entry = tk.Entry(book_entry_frame, width=30)
     search_entry.pack(side="left", padx=(0, 10))
 
-    search_button = tk.Button(book_entry_frame, text="Search", command=search_books,bg="#CCCCCC")
+    search_button = tk.Button(book_entry_frame, text="Search", command=search_by_title, bg="#CCCCCC")
     search_button.pack(side="left")
 
     reset_button = tk.Button(book_entry_frame,text="Reset", command=lambda: display_books(main.book_data), bg="#CCCCCC")
     reset_button.pack(side="left", padx=(5, 0))
 
-    add_button = tk.Button(book_entry_frame, text="Add New Book", command=lambda: build_book_addition_screen(), bg="#B3E6B3")
+def show_author_search():
+    def search_by_author():
+        query = search_entry.get().strip().lower()
+        if not query:
+            display_books(main.book_data)
+            return
+
+        filtered_books = {
+            key: book for key, book in main.book_data.items()
+            if query in book["author"].lower()
+        }
+
+        display_books(filtered_books)
+
+    tk.Label(book_entry_frame2, text="Search Book Author:", fg="black", bg="#E6E6E6", font=("Comic Sans MS", 11, "bold")).pack(side="left", padx=(0, 5))
+
+    search_entry = tk.Entry(book_entry_frame2, width=30)
+    search_entry.pack(side="left", padx=(0, 10))
+
+    search_button = tk.Button(book_entry_frame2, text="Search", command=search_by_author,bg="#CCCCCC")
+    search_button.pack(side="left")
+
+    reset_button = tk.Button(book_entry_frame2,text="Reset", command=lambda: display_books(main.book_data), bg="#CCCCCC")
+    reset_button.pack(side="left", padx=(5, 0))
+
+def show_add_button():
+    add_button = tk.Button(book_add_frame, text="Add New Book", command=lambda: build_book_addition_screen(), bg="#B3E6B3")
     add_button.pack(side="left", padx=(10, 0))
 
 def build_book_addition_screen():
@@ -100,7 +132,7 @@ def build_book_addition_screen():
     tk.Button(add_frame, text="Save Book", bg="#B3E6B3",
               command=lambda: save_new_book(entries)).grid(row=7, column=0, columnspan=2, pady=15)
     tk.Button(add_frame, text="Back", bg="#CCCCCC",
-              command=lambda: display_books(main.book_data)).grid(row=8, column=0, columnspan=2, pady=5)
+              command=lambda: back_button()).grid(row=8, column=0, columnspan=2, pady=5)
 
 def save_new_book(entries):
     title = entries["title"].get().strip()
@@ -148,13 +180,48 @@ def save_new_book(entries):
     book_entry_frame = tk.Frame(book_inventory, bg="#E6E6E6")
     book_entry_frame.pack(pady=10)
 
+    global book_entry_frame2, book_display_frame
+    book_entry_frame2 = tk.Frame(book_inventory, bg="#E6E6E6")
+    book_entry_frame2.pack(pady=10)
+
+    global book_add_frame, book_display_frame
+    book_add_frame = tk.Frame(book_inventory, bg="#E6E6E6")
+    book_add_frame.pack(pady=10)
+
     book_display_frame = tk.Frame(book_inventory, bg="#E6E6E6")
     book_display_frame.pack()
 
     display_books(main.book_data)
-    show_top_row()
+    show_title_search()
+    show_author_search()
+    show_add_button()
 
+def back_button():
+    for widget in book_inventory.winfo_children():
+        widget.destroy()
+
+    global book_entry_frame, book_display_frame
+    book_entry_frame = tk.Frame(book_inventory, bg="#E6E6E6")
+    book_entry_frame.pack(pady=10)
+
+    global book_entry_frame2, book_display_frame
+    book_entry_frame2 = tk.Frame(book_inventory, bg="#E6E6E6")
+    book_entry_frame2.pack(pady=10)
+
+    global book_add_frame, book_display_frame
+    book_add_frame = tk.Frame(book_inventory, bg="#E6E6E6")
+    book_add_frame.pack(pady=10)
+
+    book_display_frame = tk.Frame(book_inventory, bg="#E6E6E6")
+    book_display_frame.pack()
+
+    display_books(main.book_data)
+    show_title_search()
+    show_author_search()
+    show_add_button()
 
 display_books(main.book_data)
-show_top_row()
+show_title_search()
+show_author_search()
+show_add_button()
 book_inventory.mainloop()
