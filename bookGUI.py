@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.messagebox
 import main
 
 book_inventory = tk.Tk()
@@ -18,6 +19,9 @@ def delete_book(book_key):
     if book_key in main.book_data:
         del main.book_data[book_key]
         display_books(main.book_data)
+
+        tkinter.messagebox.showinfo("Alert!", "Book successfully deleted")
+
 
 def display_books(book_data):
     for widget in book_display_frame.winfo_children():
