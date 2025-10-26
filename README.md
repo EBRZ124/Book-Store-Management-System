@@ -8,6 +8,8 @@ Added a delete button on every listed book.
 
 A user can now add new books to the inventory; Gets appropriate errors when typing wrong information (duplicate ISBN numbers, price or stock is not a number)
 
+Improved search functionality: A user can search books not just by titles, but also authors. Currently there are just two seperate search bars, could be changed in the future.
+
 - 24.10.2025.
 
 Improved searching - word segments will display what is being searched for
