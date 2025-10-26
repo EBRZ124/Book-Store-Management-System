@@ -1,4 +1,4 @@
-import tkinter as tk
+ import tkinter as tk
 import tkinter.messagebox
 import main
 
@@ -73,8 +73,9 @@ def show_title_search():
 
     tk.Label(book_entry_frame, text="Search Book Title:", fg="black", bg="#E6E6E6", font=("Comic Sans MS", 11, "bold")).pack(side="left", padx=(0, 5))
 
-    search_entry = tk.Entry(book_entry_frame, width=30)
+    search_entry = tk.Entry(book_entry_frame, width=30, bg="#E6E6E6", fg="black")
     search_entry.pack(side="left", padx=(0, 10))
+    search_entry.update_idletasks()
 
     search_button = tk.Button(book_entry_frame, text="Search", command=search_by_title, bg="#CCCCCC")
     search_button.pack(side="left")
@@ -98,8 +99,9 @@ def show_author_search():
 
     tk.Label(book_entry_frame2, text="Search Book Author:", fg="black", bg="#E6E6E6", font=("Comic Sans MS", 11, "bold")).pack(side="left", padx=(0, 5))
 
-    search_entry = tk.Entry(book_entry_frame2, width=30)
+    search_entry = tk.Entry(book_entry_frame2, width=30, bg="#E6E6E6", fg="black")
     search_entry.pack(side="left", padx=(0, 10))
+    search_entry.update_idletasks()
 
     search_button = tk.Button(book_entry_frame2, text="Search", command=search_by_author,bg="#CCCCCC")
     search_button.pack(side="left")
@@ -127,6 +129,7 @@ def build_book_addition_screen():
         tk.Label(add_frame, text=field, fg="black", bg="#E6E6E6", font=("Comic Sans MS", 10)).grid(row=i+1, column=0, sticky="e", pady=5, padx=5)
         entry = tk.Entry(add_frame, width=30, bg="#E6E6E6", fg="black")
         entry.grid(row=i+1, column=1, padx=10, pady=10)
+        entry.update_idletasks()
         entries[field.replace(":", "").strip().lower()] = entry
 
     tk.Button(add_frame, text="Save Book", bg="#B3E6B3",
