@@ -6,6 +6,8 @@ Current State:
 
 Added a delete button on every listed book.
 
+A user can now add new books to the inventory; Gets appropriate errors when typing wrong information (duplicate ISBN numbers, price or stock is not a number)
+
 - 24.10.2025.
 
 Improved searching - word segments will display what is being searched for
