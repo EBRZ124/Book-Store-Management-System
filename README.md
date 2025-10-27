@@ -4,7 +4,11 @@ Current State:
 
 - 27.10.2025.
 
-Added - search by ISBN number
+Added: 
+
+1. search by ISBN number
+
+2. Management section - a user can search a book by the ISBN number and has the option to delete a specific book
 
 - 26.10.2025.
 
