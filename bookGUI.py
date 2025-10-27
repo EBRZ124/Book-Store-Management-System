@@ -24,12 +24,17 @@ book_display_frame.pack()
 
 books_per_row = 3
 
-def delete_book(book_key):
+def delete_book(book_key, refresh_callback=None):
     if book_key in main.book_data:
         del main.book_data[book_key]
-        display_books(main.book_data)
 
         tkinter.messagebox.showinfo("Alert!", "Book successfully deleted")
+
+        if refresh_callback:
+            refresh_callback(main.book_data)
+        else:
+            display_books(main.book_data)
+
     
 
 def display_books(book_data):
@@ -143,7 +148,7 @@ def show_add_button():
     add_button = tk.Button(book_add_frame, text="Add New Book", command=lambda: build_book_addition_screen(), bg="#B3E6B3")
     add_button.pack(side="left", padx=10)
 
-    management_button = tk.Button(book_add_frame, text = "Manage Books", bg="#B3E6B3")
+    management_button = tk.Button(book_add_frame, text = "Manage Books", command=lambda: build_book_management_screen(), bg="#B3E6B3")
     management_button.pack(side="left", padx=10)
 
 def build_book_addition_screen():
@@ -219,7 +224,7 @@ def save_new_book(entries):
     global book_entry_frame2, book_display_frame
     book_entry_frame2 = tk.Frame(book_inventory, bg="#E6E6E6")
     book_entry_frame2.pack(pady=10)
-    
+
     global book_entry_frame3, book_display_frame
     book_entry_frame3 = tk.Frame(book_inventory, bg="#E6E6E6")
     book_entry_frame3.pack(pady=10)
@@ -235,6 +240,73 @@ def save_new_book(entries):
     show_title_search()
     show_author_search()
     show_add_button()
+
+def build_book_management_screen():
+    for widget in book_inventory.winfo_children():
+        widget.destroy()
+
+    management_frame = tk.Frame(book_inventory, bg="#E6E6E6")
+    management_frame.pack(pady=20)
+
+    tk.Label(management_frame, text="Manage Books (Search & Delete by ISBN)", bg="#E6E6E6", fg="black", font=("Comic Sans MS", 20, "bold")).pack(pady=10)
+
+    search_frame = tk.Frame(management_frame, bg="#E6E6E6")
+    search_frame.pack(pady=10)
+
+    tk.Label(search_frame, text="Search by ISBN:",fg="black",bg="#E6E6E6",font=("Comic Sans MS", 11, "bold")).pack(side="left", padx=(0, 5))
+
+    search_entry = tk.Entry(search_frame, width=30, bg="white", fg="black")
+    search_entry.pack(side="left", padx=(0, 10))
+    search_entry.update_idletasks()
+
+    book_display_frame = tk.Frame(management_frame, bg="#E6E6E6")
+    book_display_frame.pack(pady=10)
+
+    books_per_row = 3
+
+    def display_books_with_delete(book_data):
+        for widget in book_display_frame.winfo_children():
+            widget.destroy()
+
+        row, col = 0, 0
+        for key, book in book_data.items():
+            book_frame = tk.Frame(book_display_frame,borderwidth=2,relief="ridge",bg="white",padx=10,pady=10)
+            book_frame.grid(row=row, column=col, padx=10, pady=10, sticky="n")
+
+            tk.Label(book_frame, text=book["title"], font=("Comic Sans MS", 12, "bold"), fg="black", bg="white").pack(anchor="w")
+            tk.Label(book_frame, text=f"Author: {book['author']}", font=("Comic Sans MS", 10),  fg="black", bg="white").pack(anchor="w")
+            tk.Label(book_frame, text=f"ISBN: {book['ISBN']}", font=("Comic Sans MS", 9), fg="black", bg="white").pack(anchor="w")
+            tk.Label(book_frame, text=f"Price: ${book['price']}", font=("Comic Sans MS", 10, "bold"), fg="black", bg="white").pack(anchor="w")
+            tk.Label(book_frame, text=f"Stock: {book['stock']}", font=("Comic Sans MS", 10), fg="black", bg="white").pack(anchor="w")
+            tk.Button(book_frame, text="Delete Book", font=("Comic Sans MS", 8), bg="#FFCCCC", command=lambda k=key: delete_book(k, display_books_with_delete)).pack(anchor="w")
+
+            col += 1
+            if col >= books_per_row:
+                col = 0
+                row += 1
+
+    def search_by_isbn():
+        query = search_entry.get().strip()
+        if not query:
+            display_books_with_delete(main.book_data)
+            return
+
+        filtered_books = {
+            key: book for key, book in main.book_data.items()
+            if query in str(book["ISBN"])
+        }
+
+        display_books_with_delete(filtered_books)
+
+    search_button = tk.Button(search_frame, text="Search", command=search_by_isbn, bg="#CCCCCC")
+    search_button.pack(side="left")
+
+    reset_button = tk.Button(search_frame, text="Reset", command=lambda: display_books_with_delete(main.book_data), bg="#CCCCCC")
+    reset_button.pack(side="left", padx=(5, 0))
+
+    tk.Button(management_frame,text="Back",bg="#CCCCCC",font=("Comic Sans MS", 10),command=lambda: back_button()).pack(pady=10)
+
+    display_books_with_delete(main.book_data)
 
 def back_button():
     for widget in book_inventory.winfo_children():
