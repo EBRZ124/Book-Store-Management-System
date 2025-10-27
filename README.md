@@ -10,6 +10,8 @@ Added:
 
 2. Management section - a user can search a book by the ISBN number and has the option to delete a specific book
 
+3. In all search functions, if a user looks up an author, title or an isbn number and there are no matching results, a corresponding line will be displayed
+
 - 26.10.2025.
 
 Added a delete button on every listed book.
