@@ -35,8 +35,6 @@ def delete_book(book_key, refresh_callback=None):
         else:
             display_books(main.book_data)
 
-    
-
 def display_books(book_data):
     for widget in book_display_frame.winfo_children():
         widget.destroy()
@@ -77,6 +75,12 @@ def show_title_search():
             if query in book["title"].lower()
         }
 
+        if not filtered_books:
+            for widget in book_display_frame.winfo_children():
+                widget.destroy()
+            tk.Label(book_display_frame, text="No results found", bg="#E6E6E6", fg="black", font=("Comic Sans MS", 12, "italic")).pack(pady=20)
+            return
+
         display_books(filtered_books)
 
     tk.Label(book_entry_frame, text="Search Book Title:", fg="black", bg="#E6E6E6", font=("Comic Sans MS", 11, "bold")).pack(side="left", padx=(0, 5))
@@ -103,6 +107,12 @@ def show_author_search():
             if query in book["author"].lower()
         }
 
+        if not filtered_books:
+            for widget in book_display_frame.winfo_children():
+                widget.destroy()
+            tk.Label(book_display_frame, text="No results found", bg="#E6E6E6", fg="black", font=("Comic Sans MS", 12, "italic")).pack(pady=20)
+            return
+
         display_books(filtered_books)
 
     tk.Label(book_entry_frame2, text="Search Book Author:", fg="black", bg="#E6E6E6", font=("Comic Sans MS", 11, "bold")).pack(side="left", padx=(0, 5))
@@ -128,6 +138,12 @@ def show_isbn_search():
             key: book for key, book in main.book_data.items()
             if query in str(book["ISBN"])
         }
+
+        if not filtered_books:
+            for widget in book_display_frame.winfo_children():
+                widget.destroy()
+            tk.Label(book_display_frame, text="No results found", bg="#E6E6E6", fg="black", font=("Comic Sans MS", 12, "italic")).pack(pady=20)
+            return
 
         display_books(filtered_books)
 
@@ -295,6 +311,12 @@ def build_book_management_screen():
             key: book for key, book in main.book_data.items()
             if query in str(book["ISBN"])
         }
+
+        if not filtered_books:
+            for widget in book_display_frame.winfo_children():
+                widget.destroy()
+            tk.Label(book_display_frame, text="No results found", bg="#E6E6E6", fg="black", font=("Comic Sans MS", 12, "italic")).pack(pady=20)
+            return
 
         display_books_with_delete(filtered_books)
 
