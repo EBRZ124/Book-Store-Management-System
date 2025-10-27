@@ -1,4 +1,4 @@
- import tkinter as tk
+import tkinter as tk
 import tkinter.messagebox
 import main
 
@@ -6,6 +6,9 @@ book_inventory = tk.Tk()
 book_inventory.title("Book Inventory")
 book_inventory.geometry("740x580")
 book_inventory.configure(bg="#E6E6E6", cursor="star")
+
+book_entry_frame3 = tk.Frame(book_inventory, bg="#E6E6E6")
+book_entry_frame3.pack(pady=10)
 
 book_entry_frame = tk.Frame(book_inventory, bg="#E6E6E6")
 book_entry_frame.pack(pady=10)
@@ -50,7 +53,7 @@ def display_books(book_data):
         tk.Label(book_frame, text=f"ISBN: {book['ISBN']}", font=("Comic Sans MS", 9), fg="black", bg="white").pack(anchor="w")
         tk.Label(book_frame, text=f"Price: ${book['price']}", font=("Comic Sans MS", 10, "bold"), fg="black", bg="white").pack(anchor="w")
         tk.Label(book_frame, text=f"Stock: {book['stock']}", font=("Comic Sans MS", 10), bg="white").pack(anchor="w")
-        delete = tk.Button(book_frame, text = "Delete Book", font=("Comic Sans MS", 8), bg="#FFCCCC", command=lambda k=key: delete_book(k)).pack(anchor="w")
+        #delete = tk.Button(book_frame, text = "Delete Book", font=("Comic Sans MS", 8), bg="#FFCCCC", command=lambda k=key: delete_book(k)).pack(anchor="w")
 
         col += 1
         if col >= books_per_row:
@@ -109,9 +112,39 @@ def show_author_search():
     reset_button = tk.Button(book_entry_frame2,text="Reset", command=lambda: display_books(main.book_data), bg="#CCCCCC")
     reset_button.pack(side="left", padx=(5, 0))
 
+def show_isbn_search():
+    def search_by_isbn():
+        query = search_entry.get().strip()
+        if not query:
+            display_books(main.book_data)
+            return
+
+        filtered_books = {
+            key: book for key, book in main.book_data.items()
+            if query in str(book["ISBN"])
+        }
+
+        display_books(filtered_books)
+
+
+    tk.Label(book_entry_frame3, text="Search Book ISBN:", fg="black", bg="#E6E6E6", font=("Comic Sans MS", 11, "bold")).pack(side="left", padx=(0, 5))
+
+    search_entry = tk.Entry(book_entry_frame3, width=30, bg="#E6E6E6", fg="black")
+    search_entry.pack(side="left", padx=(0, 10))
+    search_entry.update_idletasks()
+
+    search_button = tk.Button(book_entry_frame3, text="Search", command=search_by_isbn,bg="#CCCCCC")
+    search_button.pack(side="left")
+
+    reset_button = tk.Button(book_entry_frame3,text="Reset", command=lambda: display_books(main.book_data), bg="#CCCCCC")
+    reset_button.pack(side="left", padx=(5, 0))
+
 def show_add_button():
     add_button = tk.Button(book_add_frame, text="Add New Book", command=lambda: build_book_addition_screen(), bg="#B3E6B3")
-    add_button.pack(side="left", padx=(10, 0))
+    add_button.pack(side="left", padx=10)
+
+    management_button = tk.Button(book_add_frame, text = "Manage Books", bg="#B3E6B3")
+    management_button.pack(side="left", padx=10)
 
 def build_book_addition_screen():
     for widget in book_inventory.winfo_children():
@@ -186,6 +219,10 @@ def save_new_book(entries):
     global book_entry_frame2, book_display_frame
     book_entry_frame2 = tk.Frame(book_inventory, bg="#E6E6E6")
     book_entry_frame2.pack(pady=10)
+    
+    global book_entry_frame3, book_display_frame
+    book_entry_frame3 = tk.Frame(book_inventory, bg="#E6E6E6")
+    book_entry_frame3.pack(pady=10)
 
     global book_add_frame, book_display_frame
     book_add_frame = tk.Frame(book_inventory, bg="#E6E6E6")
@@ -211,6 +248,10 @@ def back_button():
     book_entry_frame2 = tk.Frame(book_inventory, bg="#E6E6E6")
     book_entry_frame2.pack(pady=10)
 
+    global book_entry_frame3, book_display_frame
+    book_entry_frame3 = tk.Frame(book_inventory, bg="#E6E6E6")
+    book_entry_frame3.pack(pady=10)
+
     global book_add_frame, book_display_frame
     book_add_frame = tk.Frame(book_inventory, bg="#E6E6E6")
     book_add_frame.pack(pady=10)
@@ -219,11 +260,13 @@ def back_button():
     book_display_frame.pack()
 
     display_books(main.book_data)
+    show_isbn_search()
     show_title_search()
     show_author_search()
     show_add_button()
 
 display_books(main.book_data)
+show_isbn_search()
 show_title_search()
 show_author_search()
 show_add_button()
