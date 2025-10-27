@@ -2,6 +2,10 @@ Goal: Make a book store management system where a user can both create a listing
 
 Current State:
 
+- 27.10.2025.
+
+Added - search by ISBN number
+
 - 26.10.2025.
 
 Added a delete button on every listed book.
